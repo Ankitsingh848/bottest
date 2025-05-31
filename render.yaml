@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: telegram-automation-bot
+    env: python
+    plan: free
+    buildCommand: pip install python-telegram-bot==20.8 flask==3.1.1 reportlab==4.4.1 qrcode==8.2 requests==2.32.3 gunicorn==23.0.0 pillow==11.2.1
+    startCommand: gunicorn --bind 0.0.0.0:$PORT main:app
+    envVars:
+      - key: BOT_TOKEN
+        value: 7934979055:AAFGcVsNbhYh6j3RpLiGbjIHmu1Zx-mFiwc
+      - key: RENDER_EXTERNAL_URL
+        fromService:
+          type: web
+          name: telegram-automation-bot
+          property: url
+      - key: PORT
+        value: 5000
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ENABLE_AUTO_SCAN
+        value: true
+      - key: ENABLE_ANIMATIONS
+        value: true
+      - key: DEFAULT_SCAN_INTERVAL
+        value: 10
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DEBUG
+        value: false
+    healthCheckPath: /
+    disk:
+      name: temp-storage
+      mountPath: /tmp
+      sizeGB: 1
